@@ -1,0 +1,55 @@
+name: Generate Thumbnails
+on:
+  push:
+    paths:
+      - 'images/album/**'
+  workflow_dispatch:
+
+jobs:
+  thumbnails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install imagemagick
+        
+      - name: Create thumbnails directory
+        run: mkdir -p images/album/thumbnails
+
+      - name: Generate thumbnails
+        run: |
+          echo "Generating thumbnails for album images..."
+          count=0
+          for img in images/album/*.jpg images/album/*.jpeg images/album/*.png images/album/*.JPG images/album/*.JPEG images/album/*.PNG; do
+            if [ -f "$img" ]; then
+              filename=$(basename "$img")
+              name="${filename%.*}"
+              ext="${filename##*.}"
+              thumbnail_path="images/album/thumbnails/thumb_${name}.${ext}"
+              
+              echo "Processing: $img -> $thumbnail_path"
+              
+              # Generate thumbnail: 300x200 with smart cropping
+              convert "$img" -auto-orient -resize 300x200^ -gravity center -extent 300x200 -quality 85 "$thumbnail_path"
+              
+              count=$((count + 1))
+            fi
+          done
+          echo "Generated $count thumbnails"
+          
+      - name: Commit and push thumbnails
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add images/album/thumbnails/
+          
+          if git diff --staged --quiet; then
+            echo "No new thumbnails to commit"
+          else
+            git commit -m "Auto-generate thumbnails for album images"
+            git push
+            echo "Thumbnails committed and pushed"
+          fi

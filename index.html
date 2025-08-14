@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casa Lixenstrand</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lora:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>Casa Lixenstrand</h1>
+      <p class="subtitle" data-key="header_subtitle">Riviera del Sol, Costa del Sol</p>
+    </div>
+    <div class="language-dropdown">
+      <button class="dropdown-btn" onclick="toggleDropdown()">
+        <span class="flag" id="current-flag">&#x1F1F8;&#x1F1EA;</span>
+        <span class="dropdown-arrow">▼</span>
+      </button>
+      <div class="dropdown-content" id="dropdown-content">
+        <a href="#" onclick="setLanguage('sv')">
+          <span class="flag">🇸🇪</span> Svenska
+        </a>
+        <a href="#" onclick="setLanguage('en')">
+          <span class="flag">🇬🇧</span> English
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="welcome">
+      <h2 data-key="welcome_title"></h2>
+      <p data-key="welcome_text"></p>
+    </section>
+
+    <section id="about">
+      <h2 data-key="about_title"></h2>
+      <p data-key="about_text"></p>
+    </section>
+
+    <section id="pricing">
+      <h2 data-key="pricing_title"></h2>
+      <p data-key="pricing_text"></p>
+    </section>
+
+    <section id="gallery">
+      <h2 data-key="gallery_title"></h2>
+      <div class="gallery-container" id="gallery-container">
+        <!-- Gallery images will be loaded dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+      <div class="lightbox-content">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-image" src="" alt="">
+        <div class="lightbox-nav">
+          <button class="lightbox-prev" onclick="changeLightboxImage(-1)">&#10094;</button>
+          <button class="lightbox-next" onclick="changeLightboxImage(1)">&#10095;</button>
+        </div>
+        <div class="lightbox-counter">
+          <span id="lightbox-counter">1 / 27</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="availability">
+      <h2 data-key="availability_title"></h2>
+      <p data-key="availability_text"></p>
+
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <button onclick="openCalendarModal()" class="calendar-btn">
+            <svg class="calendar-icon" viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            <span data-key="view_calendar_button">Visa tillgänglighet</span>
+          </button>
+        </div>
+
+        <!-- Compact calendar preview -->
+        <div class="calendar-preview">
+          <p data-key="calendar_info">Klicka för att se detaljerad tillgänglighet och boka dina datum.</p>
+        </div>
+      </div>
+
+      <!-- Calendar Modal -->
+      <div id="calendarModal" class="modal">
+        <div class="modal-content calendar-modal-content">
+          <div class="modal-header">
+            <h3 data-key="calendar_modal_title">Tillgänglighet & Bokning</h3>
+            <span class="close" onclick="closeCalendarModal()">&times;</span>
+          </div>
+          <div class="calendar-embed">
+            <iframe src="https://calendar.google.com/calendar/embed?src=tv67rt8kntsc33oguleb6k1qh4%40group.calendar.google.com&ctz=Europe%2FStockholm"
+                    style="border: 0"
+                    width="100%"
+                    height="600"
+                    frameborder="0"
+                    scrolling="no">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 data-key="contact_title"></h2>
+      <p data-key="contact_text"></p>
+
+      <div class="contact-buttons">
+        <a href="https://wa.me/46724431753" target="_blank" rel="noopener" class="whatsapp-btn">
+          <svg class="whatsapp-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+          </svg>
+          <span data-key="whatsapp_button">Kontakta oss på WhatsApp</span>
+        </a>
+
+        <button onclick="openEmailModal()" class="email-btn">
+          <svg class="email-icon" viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          <span data-key="email_button">Maila oss</span>
+        </button>
+      </div>
+
+      <!-- Email Modal -->
+      <div id="emailModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 data-key="email_modal_title">Skicka meddelande</h3>
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+          </div>
+          <form action="https://formspree.io/f/your-form-id" method="POST">
+            <input type="text" name="name" placeholder="Namn / Name" required />
+            <input type="email" name="email" placeholder="E-post" required />
+            <textarea name="message" placeholder="Meddelande / Message" required></textarea>
+            <button type="submit" data-key="send_button"></button>
+          </form>
+        </div>
+      </div>
+
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.8523480132054!2d-4.716889684686765!3d36.4974290799846!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f11!3m3!1m2!1s0xd72d61b78f6b9c3%3A0x3d25fc24c518d5d5!2sRiviera%20del%20Sol%2C%20Mijas%2C%20M%C3%A1laga%2C%20Spanien!5e0!3m2!1ssv!2ses!4v1694786172819!5m2!1ssv!2ses"
+        width="100%" height="375" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Casa Lixenstrand</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
