@@ -5,7 +5,7 @@ const translations = {
     welcome_title: "Välkommen till Casa Lixenstrand",
     welcome_text: "Upptäck vårt vackra semesterboende beläget i Riviera del Sol på Costa del Sol. Med gångavstånd till många bra restauranger i både Riviera och Calahonda, samt nära Riviera 11 Sport Club, Max Beach Club och Miraflores Golf, erbjuder Casa Lixenstrand den perfekta platsen för en oförglömlig semester.",
     about_title: "Om Huset",
-    about_text: "Casa Lixenstrand erbjuder bekvämt boende<br><br>• 200 m² radhus<br>• 3 sovrum med egna badrum (6 sovplatser)<br>• Fullt utrustat kök med stor kyl/frys<br>• 3 balkonger, uteplats och garageuppfart<br>• Tvättstuga och toalett i källaren<br>• Biorum med projektor<br>• 2 höj- och sänkbara skrivbord + 32\" 4K-skärmar (perfekt för distansjobb!)<br><br>Huset är smakfullt inrett och har alla moderna bekvämligheter du behöver för en avkopplande semester.",
+    about_text: "Casa Lixenstrand erbjuder bekvämt boende<br><br>• 200 m² radhus<br>• 3 sovrum med egna badrum (6 sovplatser)<br>• Fullt utrustat kök med stor kyl/frys<br>• 3 balkonger, uteplats och garageuppfart<br>• Tvättstuga och toalett i källaren<br>• Biorum med projektor<br>• 2 höj- och sänkbara skrivbord + 32\" 4K-skärmar (perfekt för distansjobb!)<br>• Gigabit-internet<br>• 7 kW solpaneler och 5 kWh batteri<br><br>Huset är smakfullt inrett och har alla moderna bekvämligheter du behöver för en avkopplande semester.",
     pricing_title: "Priser",
     pricing_text: "Våra priser varierar beroende på säsong och vistelsens längd. Kontakta oss för aktuella priser och tillgänglighet. Vi erbjuder konkurrenskraftiga priser för detta fantastiska läge.",
     gallery_title: "Galleri",
@@ -26,7 +26,7 @@ const translations = {
     welcome_title: "Welcome to Casa Lixenstrand",
     welcome_text: "Discover our beautiful vacation rental located in the picturesque Riviera del Sol on Costa del Sol. Within walking distance to many excellent restaurants in both Riviera and Calahonda, and close to Riviera 11 Sport Club, Max Beach Club and Miraflores Golf, Casa Lixenstrand offers the perfect location for an unforgettable vacation.",
     about_title: "About the House",
-    about_text: "Casa Lixenstrand offers comfortable accommodation for up to 6 people.<br><br>• 200 m² townhouse<br>• 3 bedrooms with private bathrooms (6 sleeping places)<br>• Fully equipped kitchen with large fridge/freezer<br>• 3 balconies, patio and garage driveway<br>• Laundry room and toilet in basement<br>• Cinema room with projector<br>• 2 height-adjustable desks + 32\" 4K screens (perfect for remote work!)<br><br>The house is tastefully decorated and has all modern amenities you need for a relaxing vacation.",
+    about_text: "Casa Lixenstrand offers comfortable accommodation for up to 6 people.<br><br>• 200 m² townhouse<br>• 3 bedrooms with private bathrooms (6 sleeping places)<br>• Fully equipped kitchen with large fridge/freezer<br>• 3 balconies, patio and garage driveway<br>• Laundry room and toilet in basement<br>• Cinema room with projector<br>• 2 height-adjustable desks + 32\" 4K screens (perfect for remote work!)<br>• Gigabit internet<br>• 7 kW solar panels and 5 kWh battery<br><br>The house is tastefully decorated and has all modern amenities you need for a relaxing vacation.",
     pricing_title: "Pricing",
     pricing_text: "Our prices vary depending on season and length of stay. Contact us for current prices and availability. We offer competitive rates for this fantastic location.",
     gallery_title: "Gallery",
@@ -44,7 +44,29 @@ const translations = {
   }
 };
 
+const DEFAULT_LANG = "sv";
+
+function isSupportedLanguage(lang) {
+  return Object.prototype.hasOwnProperty.call(translations, lang);
+}
+
+function getLanguageFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const lang = params.get("lang");
+  return isSupportedLanguage(lang) ? lang : null;
+}
+
+function updateLanguageUrl(lang) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("lang", lang);
+  window.history.replaceState({}, "", url);
+}
+
 function setLanguage(lang) {
+  if (!isSupportedLanguage(lang)) {
+    lang = DEFAULT_LANG;
+  }
+
   const elements = document.querySelectorAll('[data-key]');
   elements.forEach(element => {
     const key = element.getAttribute('data-key');
@@ -66,6 +88,9 @@ function setLanguage(lang) {
 
   // Update html lang attribute
   document.documentElement.lang = lang;
+
+  // Keep the active language shareable in the URL.
+  updateLanguageUrl(lang);
 
   // Update form placeholders
   const nameInput = document.querySelector('input[name="name"]');
@@ -283,7 +308,8 @@ document.addEventListener('keydown', (e) => {
 
 // Initialize everything when DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
-  const defaultLang = localStorage.getItem("lang") || "sv";
+  const savedLang = localStorage.getItem("lang");
+  const defaultLang = getLanguageFromUrl() || (isSupportedLanguage(savedLang) ? savedLang : DEFAULT_LANG);
   setLanguage(defaultLang);
 
   // Load gallery
